@@ -2,12 +2,13 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Snake.h"
 #include "FoodGenerator.h"
+#include "HamiltonianCycle.h"
+#include "Snake.h"
 
 using namespace sf;
 
-Game::Game(const unsigned int numberOfColumns, const unsigned int numberOfLines, const unsigned int cellSize) : m_cellSize(cellSize), m_screenWidth(cellSize* numberOfColumns), m_screenHeight(cellSize* numberOfLines)
+Game::Game(const unsigned numberOfColumns, const unsigned numberOfLines, const unsigned cellSize) : m_cellSize(cellSize), m_screenWidth(cellSize* numberOfColumns), m_screenHeight(cellSize* numberOfLines)
 {
 	
 }
@@ -16,8 +17,11 @@ void Game::Run() const
 {
 	RenderWindow window(VideoMode(m_screenWidth, m_screenHeight), "Snake !!!!!");
 
-	window.setFramerateLimit(120);
+	window.setVerticalSyncEnabled(false);
+	window.setFramerateLimit(0);
 	window.setKeyRepeatEnabled(false);
+
+	//HamiltonianCycle cycle(window, m_screenWidth / m_cellSize, m_screenHeight / m_cellSize);
 
 	FoodGenerator foodGen(window, m_cellSize);
 
@@ -54,6 +58,7 @@ void Game::Run() const
 
 		snake.Draw();
 		foodGen.Draw();
+		//cycle.Draw();
 		
 		window.display();
 	}

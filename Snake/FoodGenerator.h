@@ -7,7 +7,7 @@ using namespace sf;
 class FoodGenerator
 {
 public:
-	FoodGenerator(RenderWindow& window, unsigned int cellSize);
+	FoodGenerator(RenderWindow& window, unsigned cellSize);
 
 	RectangleShape m_fruit;
 
@@ -16,5 +16,5 @@ public:
 
 private:
 	RenderWindow& m_window;
-	unsigned int m_cellSize;
+	unsigned m_cellSize;
 };

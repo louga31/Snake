@@ -9,7 +9,7 @@ using namespace sf;
 class Snake
 {
 public:
-	Snake(RenderWindow& window, unsigned int cellSize, FoodGenerator& foodGen);
+	Snake(RenderWindow& window, unsigned cellSize, FoodGenerator& foodGen);
 
 	void Move();
 	void Update(Event& event);
@@ -17,10 +17,12 @@ public:
 	
 private:
 	RenderWindow& m_window;
-	unsigned int m_cellSize;
+	unsigned m_cellSize;
 	Vector2i m_direction;
 	Clock m_clock;
-	int m_timeToUpdate;
+	int m_timeToUpdate; // Microsecond
+	// ReSharper disable once CppInconsistentNaming
+	bool m_isAI = false;
 	std::vector<RectangleShape> m_snakes;
 	FoodGenerator& m_foodGenerator;
 
