@@ -390,3 +390,9 @@ MigrationBackup/
 .ionide/
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,visualstudio
+
+# Include External libs
+!lib/**/
+!lib/**/*.pdb
+!lib/**/*.lib
+!lib/**/*.dll
