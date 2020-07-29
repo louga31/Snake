@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 
 #include "FoodGenerator.h"
-#include "HamiltonianCycle.h"
 #include "Snake.h"
 
 using namespace sf;
@@ -20,8 +19,6 @@ void Game::Run() const
 	window.setVerticalSyncEnabled(false);
 	window.setFramerateLimit(0);
 	window.setKeyRepeatEnabled(false);
-
-	//HamiltonianCycle cycle(window, m_screenWidth / m_cellSize, m_screenHeight / m_cellSize);
 
 	FoodGenerator foodGen(window, m_cellSize);
 
@@ -58,7 +55,6 @@ void Game::Run() const
 
 		snake.Draw();
 		foodGen.Draw();
-		//cycle.Draw();
 		
 		window.display();
 	}
