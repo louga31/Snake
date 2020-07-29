@@ -7,14 +7,14 @@ using namespace sf;
 class FoodGenerator
 {
 public:
-	FoodGenerator(RenderWindow& window, unsigned int cellSize);
+	FoodGenerator(RenderWindow& window, unsigned cellSize);
 
 	RectangleShape m_fruit;
 
-	void GenerateFruit(std::vector<RectangleShape> snakes);
+	void GenerateFruit(const std::vector<RectangleShape>& snakes);
 	void Draw() const;
 
 private:
 	RenderWindow& m_window;
-	unsigned int m_cellSize;
+	unsigned m_cellSize;
 };

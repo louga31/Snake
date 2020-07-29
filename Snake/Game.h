@@ -2,19 +2,17 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Snake.h"
-
 using namespace sf;
 
 class Game
 {
 public:
-	Game(unsigned int numberOfColumns, unsigned int numberOfLines, unsigned int cellSize);
+	Game(unsigned numberOfColumns, unsigned numberOfLines, unsigned cellSize);
 
 	void Run() const;
 
 private:
-	unsigned int m_cellSize;
-	unsigned int m_screenWidth;
-	unsigned int m_screenHeight;
+	unsigned m_cellSize;
+	unsigned m_screenWidth;
+	unsigned m_screenHeight;
 };
