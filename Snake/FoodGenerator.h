@@ -11,7 +11,7 @@ public:
 
 	RectangleShape m_fruit;
 
-	void GenerateFruit(std::vector<RectangleShape> snakes);
+	void GenerateFruit(const std::vector<RectangleShape>& snakes);
 	void Draw() const;
 
 private:

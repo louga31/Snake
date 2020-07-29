@@ -175,7 +175,30 @@ void Snake::AddCase() // Add 1 more case
 	else
 	{
 		cell.setFillColor(Color::Green);
-		cell.setPosition(m_snakes[m_snakes.size() - 1].getPosition().x - cell.getSize().x * m_direction.x, m_snakes[m_snakes.size() - 1].getPosition().y - cell.getSize().y * m_direction.y);
+
+		if (m_snakes[m_snakes.size() - 1].getPosition().x == m_snakes[m_snakes.size() - 2].getPosition().x)
+		{
+			if (m_snakes[m_snakes.size() - 1].getPosition().y - m_snakes[m_snakes.size() - 2].getPosition().y > 0)
+			{
+				cell.setPosition(m_snakes[m_snakes.size() - 1].getPosition().x, m_snakes[m_snakes.size() - 1].getPosition().y + 1);
+			} else
+			{
+				cell.setPosition(m_snakes[m_snakes.size() - 1].getPosition().x, m_snakes[m_snakes.size() - 1].getPosition().y - 1);
+			}
+		} else if (m_snakes[m_snakes.size() - 1].getPosition().y == m_snakes[m_snakes.size() - 2].getPosition().y)
+		{
+			if (m_snakes[m_snakes.size() - 1].getPosition().x - m_snakes[m_snakes.size() - 2].getPosition().x > 0)
+			{
+				cell.setPosition(m_snakes[m_snakes.size() - 1].getPosition().x + 1, m_snakes[m_snakes.size() - 1].getPosition().y);
+			}
+			else
+			{
+				cell.setPosition(m_snakes[m_snakes.size() - 1].getPosition().x - 1, m_snakes[m_snakes.size() - 1].getPosition().y);
+			}
+		} else
+		{
+			cell.setPosition(m_snakes[m_snakes.size() - 1].getPosition().x - cell.getSize().x * m_direction.x, m_snakes[m_snakes.size() - 1].getPosition().y - cell.getSize().y * m_direction.y);
+		}
 	}
 
 	m_snakes.push_back(cell);

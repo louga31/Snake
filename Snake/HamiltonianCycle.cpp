@@ -89,17 +89,17 @@ void HamiltonianCycle::CreateSpanningTree()
 	}
 
 	m_spanningTree.reserve(m_width * m_height);
-	auto& randomNode = m_stNodes[floor(rand() % m_stNodes.size())];
-	m_spanningTree.emplace_back(randomNode, *randomNode.m_edges[0]);
+	auto* randomNode = &RandomElement(m_stNodes);
+	m_spanningTree.emplace_back(*randomNode, *randomNode->m_edges[0]);
 
-	std::vector<HNode*> nodesInSpanningTree{ &randomNode, randomNode.m_edges[0] };
+	std::vector<HNode*> nodesInSpanningTree{ randomNode, randomNode->m_edges[0] };
 
 	while (nodesInSpanningTree.size() < m_stNodes.size())
 	{
-		randomNode = *RandomElement(nodesInSpanningTree);
+		randomNode = RandomElement(nodesInSpanningTree);
 		
 		std::vector<HNode*> edges;
-		for (auto* node : randomNode.m_edges)
+		for (auto* node : randomNode->m_edges)
 		{
 			if (!FindInVector(nodesInSpanningTree, node).first) {
 				edges.push_back(node);
@@ -110,7 +110,7 @@ void HamiltonianCycle::CreateSpanningTree()
 		{
 			auto* randomEdge = RandomElement(edges);
 			nodesInSpanningTree.push_back(randomEdge);
-			m_spanningTree.emplace_back(randomNode, *randomEdge);
+			m_spanningTree.emplace_back(*randomNode, *randomEdge);
 		}
 	}
 
@@ -154,48 +154,56 @@ void HamiltonianCycle::CreateCycle()
 	{
 		node.SetEdges(cycleNodes);
 	}
-
-	for (auto* currentSpanningTreeNode : m_spanningTreeNodes)
+	
+	for (unsigned i = 0; i < m_spanningTreeNodes.size(); i++)
 	{
+		auto* currentSpanningTreeNode = m_spanningTreeNodes[i];
+
 		for (auto* other : currentSpanningTreeNode->m_spanningTreeAdjacentNodes)
 		{
-			auto connectNodes = [this, &cycleNodes](const unsigned x1, const unsigned y1, const unsigned x2, const unsigned y2)
+			auto connectNodes = [this, &cycleNodes](int x1, int y1, int x2, int y2)
 			{
+				std::cout << x1 << " " << y1 << " " << x2 << " " << y2 << std::endl;
 				if (y1 + m_height * x1 >= cycleNodes.size() || y2 + m_height * x2 >= cycleNodes.size())
 				{
 					return;
 				}
-				auto& a = cycleNodes[y1 + m_height * x1];
-				auto& b = cycleNodes[y2 + m_height * x2];
+				auto* a = &cycleNodes[y1 + m_height * x1];
+				auto* b = &cycleNodes[y2 + m_height * x2];
 
-				a.m_spanningTreeAdjacentNodes.push_back(&b);
-				b.m_spanningTreeAdjacentNodes.push_back(&a);
+				a->m_spanningTreeAdjacentNodes.push_back(a);
+				b->m_spanningTreeAdjacentNodes.push_back(b);
+				
 			};
 
 			const auto direction = currentSpanningTreeNode->GetDirectionTo(*other);
-			const auto x = currentSpanningTreeNode->m_x * 2;
-			const auto y = currentSpanningTreeNode->m_y * 2;
-
-			if (direction.x == 1)
+			const int x = currentSpanningTreeNode->m_x * 2;
+			const int y = currentSpanningTreeNode->m_y * 2;
+			if (direction.x == 1) 
 			{
-				//is to the right
-				//CONNECT THEM
-				/*
-				 *    *----*    *
-					a         b
-				 *    *----*    *
-
-				 */
 				connectNodes(x + 1, y, x + 2, y);
 				connectNodes(x + 1, y + 1, x + 2, y + 1);
 			}
-			else if (direction.y == 1) {
+			else if (direction.y == 1)
+			{
 				connectNodes(x, y + 1, x, y + 2);
 				connectNodes(x + 1, y + 1, x + 1, y + 2);
 			}
 		}
 	}
 
+	for (auto& node : cycleNodes)
+	{
+		if (node.m_spanningTreeAdjacentNodes.size() > 1)
+		{
+			auto d = node.GetDirectionTo(*node.m_spanningTreeAdjacentNodes[0]);
+			if (d.x > 1 || d.y > 1)
+			{
+				std::cout << "bad news" << std::endl;
+			}
+		}
+	}
+	
 	//make a list of all the nodes which only have 1 adjacent node
 	//then make a list of all the edges we need to add
 	std::vector<HNode*> degree1Nodes;
@@ -213,8 +221,8 @@ void HamiltonianCycle::CreateCycle()
 		//get the direction from the other node to this one
 		auto d = node->m_spanningTreeAdjacentNodes[0]->GetDirectionTo(*node);
 		//add that direction again to get the next node
-		d.x += static_cast<int>(node->m_x);
-		d.y += static_cast<int>(node->m_y);
+		d.x += node->m_x;
+		d.y += node->m_y;
 		//d now points to the new node
 		std::shared_ptr<HEdge> newEdge = std::make_unique<HEdge>(cycleNodes[d.y + m_height * d.x], *node);
 		auto uniqueEdge = true;
@@ -249,16 +257,16 @@ void HamiltonianCycle::CreateCycle()
 	}
 
 	newEdges.clear();
-	for (auto* node : degree1Nodes)
+	for (auto* n : degree1Nodes)
 	{
-		HDirection d{ node->m_x, node->m_y };
-		for (auto* node2 : degree1Nodes)
+		HDirection d{ n->m_x, n->m_y };
+		for (auto* m : degree1Nodes)
 		{
-			if (dist(node->m_x, node->m_y, node2->m_x, node2->m_y) == 1)
+			if (dist(n->m_x, n->m_y, m->m_x, m->m_y) == 1)
 			{
-				if (floor(node->m_x / 2) == floor(node2->m_x / 2) && floor(node->m_y / 2) == floor(node2->m_y / 2))
+				if (floor(n->m_x / 2) == floor(m->m_x / 2) && floor(n->m_y / 2) == floor(m->m_y / 2))
 				{
-					std::shared_ptr<HEdge> newEdge = std::make_shared<HEdge>(*node2, *node);
+					std::shared_ptr<HEdge> newEdge = std::make_shared<HEdge>(*m, *n);
 					auto uniqueEdge = true;
 					for (const auto& edge : newEdges)
 					{
@@ -295,22 +303,22 @@ void HamiltonianCycle::CreateCycle()
 	std::vector<HNode*> cycle {&RandomElement(cycleNodes)};
 
 	auto* previous = cycle[0];
-	auto* node = cycle[0]->m_spanningTreeAdjacentNodes[0];
-	while (node != cycle[0])
+	auto* n = cycle[0]->m_spanningTreeAdjacentNodes[0];
+	while (n != cycle[0])
 	{
-		auto* next = node->m_spanningTreeAdjacentNodes[0];
+		auto* next = n->m_spanningTreeAdjacentNodes[0];
 		if (next == previous)
 		{
-			next = node->m_spanningTreeAdjacentNodes[1];
+			next = n->m_spanningTreeAdjacentNodes[1];
 		}
 		
 		if (next->m_spanningTreeAdjacentNodes.size() != 2)
 		{
 			//throw "An error happened when creating cycle";
 		}
-		cycle.push_back(node);
-		previous = node;
-		node = next;
+		cycle.push_back(n);
+		previous = n;
+		n = next;
 	}
 
 	m_cycle = cycle;
