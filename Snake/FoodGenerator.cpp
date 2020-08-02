@@ -1,4 +1,4 @@
-﻿#include "FoodGenerator.h"
+#include "FoodGenerator.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -21,8 +21,8 @@ void FoodGenerator::GenerateFruit(const std::vector<RectangleShape>& snakes)
 	auto canSpawn = true;
 	do
 	{
-		randomX = RandomInt(0, m_window.getSize().x / m_cellSize);
-		randomY = RandomInt(0, m_window.getSize().y / m_cellSize);
+		randomX = RandomInt(0, m_window.getSize().x / m_cellSize - 1);
+		randomY = RandomInt(0, m_window.getSize().y / m_cellSize - 1);
 
 		canSpawn = true;
 		for (const auto& cell : snakes)
