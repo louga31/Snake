@@ -1,8 +1,6 @@
 // ReSharper disable CppClangTidyCppcoreguidelinesMacroUsage
 #include "stdafx.h"
 
-#include "Game.h"
-
 using namespace sf;
 
 #define NUMBER_COLUMNS 30

@@ -19,54 +19,57 @@
     <Filter Include="Hamiltonian">
       <UniqueIdentifier>{2d4416b4-c64f-497b-8454-1aa37b54e077}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{81ae215b-d7ee-4b2f-823e-1ee335226007}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Snake.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FoodGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Direction.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
-    <ClCompile Include="HNode.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Hamiltonian\HNode.cpp">
+      <Filter>Hamiltonian</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Direction.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\FoodGenerator.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Snake.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Snake.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Direction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FoodGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>PCH</Filter>
     </ClInclude>
-    <ClInclude Include="HDirection.h">
+    <ClInclude Include="Hamiltonian\HDirection.h">
       <Filter>Hamiltonian</Filter>
     </ClInclude>
-    <ClInclude Include="HNode.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Hamiltonian\HNode.h">
+      <Filter>Hamiltonian</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Snake.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Direction.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\FoodGenerator.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

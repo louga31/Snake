@@ -4,11 +4,11 @@
 #include <SFML/Graphics.hpp>
 
 // Snake Headers
-#include "Direction.h"
-#include "FoodGenerator.h"
-#include "Game.h"
-#include "HDirection.h"
 #include "Utils.h"
+#include "Game/Direction.h"
+#include "Game/FoodGenerator.h"
+#include "Game/Game.h"
+#include "Hamiltonian/HDirection.h"
 
 // C++ Utility
 #include <algorithm>
