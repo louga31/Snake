@@ -1,8 +1,7 @@
-﻿#include "Game.h"
+﻿#include "stdafx.h"
 
-#include <SFML/Graphics.hpp>
+#include "Game.h"
 
-#include "FoodGenerator.h"
 #include "Snake.h"
 
 using namespace sf;

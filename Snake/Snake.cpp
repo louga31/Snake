@@ -1,9 +1,6 @@
+﻿#include "stdafx.h"
+
 #include "Snake.h"
-
-#include <SFML/Graphics.hpp>
-
-#include "Direction.h"
-#include "FoodGenerator.h"
 
 using namespace sf;
 
