@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include <vector>
 
 inline int RandomInt(const int& min, const int& max)
 {

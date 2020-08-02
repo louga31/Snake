@@ -1,7 +1,5 @@
 // ReSharper disable CppClangTidyCppcoreguidelinesMacroUsage
-#include <iostream>
-#include <random>
-
+#include "stdafx.h"
 
 #include "Game.h"
 

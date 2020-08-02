@@ -1,9 +1,5 @@
 ﻿#pragma once
 
-#include <SFML/Graphics.hpp>
-
-#include "FoodGenerator.h"
-
 using namespace sf;
 
 class Snake

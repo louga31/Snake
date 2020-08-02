@@ -1,8 +1,6 @@
 // ReSharper disable CppInconsistentNaming
 #include "stdafx.h"
 
-#include "Direction.h"
-
 using namespace sf;
 
 Vector2i Direction::up = { 0, -1 };
