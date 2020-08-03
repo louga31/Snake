@@ -1,4 +1,0 @@
-
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Condition="Exists('$(MSBuildThisFileDirectory)../../scripts/buildsystems/msbuild/vcpkg.targets')" Project="$(MSBuildThisFileDirectory)../../scripts/buildsystems/msbuild/vcpkg.targets" />
-</Project>
