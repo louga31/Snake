@@ -19,7 +19,7 @@ public:
 	void SetEdges(std::vector<HNode>& allNodes);
 	void SetSpanningTreeEdges(std::vector<HEdge>& spanningTree);
 	HDirection GetDirectionTo(const HNode& other) const;
-	HNode GetNextNodeMovingLeft(const HNode& previousNode);
+	HNode& GetNextNodeMovingLeft(HNode& previousNode);
 
 
 private:

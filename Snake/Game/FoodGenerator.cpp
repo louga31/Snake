@@ -6,7 +6,7 @@ using namespace sf;
 
 FoodGenerator::FoodGenerator(RenderWindow& window, const unsigned cellSize) : m_window(window), m_cellSize(cellSize)
 {
-	m_fruit.setSize(Vector2f(m_cellSize, m_cellSize));
+	m_fruit.setSize(Vector2f(static_cast<float>(m_cellSize), static_cast<float>(m_cellSize)));
 	m_fruit.setOutlineColor(Color::Black);
 	m_fruit.setOutlineThickness(1.0f);
 	m_fruit.setFillColor(Color::Red);
@@ -19,8 +19,8 @@ void FoodGenerator::GenerateFruit(const std::vector<RectangleShape>& snakes)
 	bool canSpawn;
 	do
 	{
-		randomX = RandomInt(0, m_window.getSize().x / m_cellSize - 1);
-		randomY = RandomInt(0, m_window.getSize().y / m_cellSize - 1);
+		randomX = RandomInt(0, static_cast<int>(m_window.getSize().x / m_cellSize - 1));
+		randomY = RandomInt(0, static_cast<int>(m_window.getSize().y / m_cellSize - 1));
 
 		canSpawn = true;
 		for (const auto& cell : snakes)
@@ -33,7 +33,7 @@ void FoodGenerator::GenerateFruit(const std::vector<RectangleShape>& snakes)
 	}
 	while (!canSpawn);
 	
-	m_fruit.setPosition(randomX * m_cellSize, randomY * m_cellSize);
+	m_fruit.setPosition(static_cast<float>(randomX * m_cellSize), static_cast<float>(randomY * m_cellSize));
 }
 
 void FoodGenerator::Draw() const

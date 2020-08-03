@@ -24,7 +24,7 @@ void Snake::Move()
 		// Move all snake cells to previous one position, except for the first cell
 		if (m_snakes.size() > 1)
 		{
-			for (unsigned i = m_snakes.size() - 1; i > 0; i--)
+			for (auto i = m_snakes.size() - 1; i > 0; i--)
 			{
 				m_snakes[i].setPosition(Vector2f(m_snakes[i - 1].getPosition().x, m_snakes[i - 1].getPosition().y));
 			}
@@ -159,7 +159,7 @@ void Snake::CheckCollision()
 void Snake::AddCase() // Add 1 more case
 {
 	RectangleShape cell;
-	cell.setSize(Vector2f(m_cellSize, m_cellSize));
+	cell.setSize(Vector2f(static_cast<float>(m_cellSize), static_cast<float>(m_cellSize)));
 	cell.setOutlineColor(Color::Black);
 	cell.setOutlineThickness(1.0f);
 

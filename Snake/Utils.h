@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿// ReSharper disable CppInconsistentNaming
+#pragma once
 
 inline int RandomInt(const int& min, const int& max)
 {
@@ -36,8 +37,7 @@ std::pair<bool, int > FindInVector(const std::vector<T>& vecOfElements, const T&
     return result;
 }
 
-// ReSharper disable once CppInconsistentNaming
-inline float dist(const int x1, const int y1, const int x2, const int y2)
+inline double dist(const int x1, const int y1, const int x2, const int y2)
 {
     return hypot(x2 - x1, y2 - y1);
 }
