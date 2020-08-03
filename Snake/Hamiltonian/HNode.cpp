@@ -2,6 +2,8 @@
 
 #include "HNode.h"
 
+#include "HEdge.h"
+
 using namespace sf;
 
 HNode::HNode(const unsigned x, const unsigned y) : m_x(x), m_y(y)
@@ -28,6 +30,27 @@ void HNode::ResetForAStar()
 {
 	m_alreadyVisited = false;
 	m_shortestDistanceToThisPoint = 0;
+}
+
+void HNode::SetEdges(std::vector<HNode>& allNodes)
+{
+	m_edges.clear();
+	
+	for (auto& node : allNodes)
+	{
+		m_edges.push_back(&node);
+	}
+}
+
+void HNode::SetSpanningTreeEdges(std::vector<HEdge>& spanningTree)
+{
+	for (const auto& edge : spanningTree)
+	{
+		if (edge.Contains(*this))
+		{
+			m_spanningTreeAdjacentNodes.push_back(&edge.GetOtherNode(*this));
+		}
+	}
 }
 
 HDirection HNode::GetDirectionTo(const HNode& other) const

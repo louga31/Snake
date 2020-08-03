@@ -1,5 +1,7 @@
 #pragma once
 
+class HEdge;
+
 class HNode
 {
 public:
@@ -11,7 +13,13 @@ public:
 	unsigned m_y;
 	int m_cycleNo = -1;
 
+	std::vector<HNode*> m_spanningTreeAdjacentNodes;
+	std::vector<HNode*> m_edges;
+
+	void SetEdges(std::vector<HNode>& allNodes);
+	void SetSpanningTreeEdges(std::vector<HEdge>& spanningTree);
 	HDirection GetDirectionTo(const HNode& other) const;
+	HNode GetNextNodeMovingLeft(const HNode& previousNode);
 
 
 private:
@@ -19,6 +27,7 @@ private:
 	//A* variables
 	bool m_alreadyVisited = false;
 	unsigned m_shortestDistanceToThisPoint = 0;
+	
 	void ResetForAStar();
 
 };
