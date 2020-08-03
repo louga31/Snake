@@ -41,3 +41,10 @@ inline float dist(const int x1, const int y1, const int x2, const int y2)
 {
     return hypot(x2 - x1, y2 - y1);
 }
+
+template <typename Cont, typename Pred>
+Cont filter(const Cont &container, Pred predicate) {
+    Cont result;
+    std::copy_if(container.begin(), container.end(), std::back_inserter(result), predicate);
+    return result;
+}

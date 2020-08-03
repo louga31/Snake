@@ -4,7 +4,6 @@
 #include <SFML/Graphics.hpp>
 
 // Snake Headers
-#include "Utils.h"
 #include "Game/Direction.h"
 #include "Game/FoodGenerator.h"
 #include "Game/Game.h"
@@ -16,9 +15,11 @@
 #include <iostream>
 #include <memory>
 #include <random>
+#include <ranges>
 #include <stdexcept>
 #include <thread>
 #include <utility>
+#include "Utils.h"
 
 // Data structures
 #include <array>

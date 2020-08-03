@@ -45,6 +45,12 @@
     <ClCompile Include="Game\Snake.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Hamiltonian\HamiltonianCycle.cpp">
+      <Filter>Hamiltonian</Filter>
+    </ClCompile>
+    <ClCompile Include="Hamiltonian\HEdge.cpp">
+      <Filter>Hamiltonian</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -71,5 +77,14 @@
     <ClInclude Include="Game\FoodGenerator.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Hamiltonian\HamiltonianCycle.h">
+      <Filter>Hamiltonian</Filter>
+    </ClInclude>
+    <ClInclude Include="Hamiltonian\HEdge.h">
+      <Filter>Hamiltonian</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
