@@ -22,11 +22,11 @@ void Game::Run() const
 	window.setFramerateLimit(0);
 	window.setKeyRepeatEnabled(false);
 
-	HamiltonianCycle cycle(window, m_cellSize, m_screenWidth / m_cellSize, m_screenHeight / m_cellSize);
+	HamiltonianCycle hamCycle(window, m_cellSize, m_screenWidth / m_cellSize, m_screenHeight / m_cellSize);
 	
 	FoodGenerator foodGen(window, m_cellSize);
 
-	Snake snake(window, cycle, m_cellSize, foodGen);
+	Snake snake(window, hamCycle, m_cellSize, foodGen);
 	
 	while (window.isOpen())
 	{
@@ -59,7 +59,7 @@ void Game::Run() const
 
 		snake.Draw();
 		foodGen.Draw();
-		cycle.Draw();
+		hamCycle.Draw();
 		
 		window.display();
 	}

@@ -8,6 +8,9 @@
 #include "Game/FoodGenerator.h"
 #include "Game/Game.h"
 #include "Hamiltonian/HDirection.h"
+#include "Hamiltonian/HEdge.h"
+#include "Hamiltonian/HNode.h"
+#include "Hamiltonian/HPath.h"
 
 // C++ Utility
 #include <algorithm>

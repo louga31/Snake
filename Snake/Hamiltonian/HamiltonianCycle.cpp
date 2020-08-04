@@ -1,9 +1,9 @@
 ﻿#include "stdafx.h"
 #include "HamiltonianCycle.h"
 
-#include "HNode.h"
+using namespace std::string_literals;
 
-#define FONT_SIZE 12
+#define FONT_SIZE 14
 
 HamiltonianCycle::HamiltonianCycle(RenderWindow& window, unsigned cellSize, const size_t width, const size_t height) :m_window(window), m_cellSize(cellSize), m_width(width), m_height(height)
 {
@@ -39,6 +39,29 @@ HNode* HamiltonianCycle::GetNextPosition(unsigned x, unsigned y)
 		}
 	}
 	return nullptr;
+}
+
+unsigned HamiltonianCycle::GetNodeNo(const unsigned x, const unsigned y)
+{
+	for (auto i = 0; i < m_cycle.size(); i++)
+	{
+		if (m_cycle[i]->m_x == x && m_cycle[i]->m_y == y)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+std::vector<unsigned> HamiltonianCycle::GetPossiblePositionsFrom(unsigned x, unsigned y)
+{
+	auto* currentNode = m_cycle[GetNodeNo(x, y)];
+	std::vector<unsigned> nodeNos;
+	for (auto& node : currentNode->m_edges)
+	{
+		nodeNos.push_back(GetNodeNo(node->m_x, node->m_y));
+	}
+	return nodeNos;
 }
 
 void HamiltonianCycle::CreateSpanningTree()
@@ -81,7 +104,7 @@ void HamiltonianCycle::CreateSpanningTree()
 	{
 		if (!FindInVector(nodesInSpanningTree, &node).first)
 		{
-			std::cout << "Spanning tree creation error (node: " << node << ")" << std::endl;
+			throw "Spanning tree creation error";
 		}
 	}
 }
@@ -222,7 +245,7 @@ void HamiltonianCycle::CreateCycle()
 	{
 		if (node.m_spanningTreeAdjacentNodes.size() != 2)
 		{
-			std::cout << "CycleNodes creation error (node: " << node << ")" << std::endl;
+			throw "CycleNodes creation error";
 		}
 	}
 
@@ -240,7 +263,7 @@ void HamiltonianCycle::CreateCycle()
 
 		if (next->m_spanningTreeAdjacentNodes.size() != 2)
 		{
-			std::cout << "Cycle creation error (node: " << node << ")" << std::endl;
+			throw "Cycle creation error";
 		}
 		m_cycle.push_back(node);
 		previous = node;

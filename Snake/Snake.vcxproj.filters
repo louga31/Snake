@@ -51,6 +51,9 @@
     <ClCompile Include="Hamiltonian\HEdge.cpp">
       <Filter>Hamiltonian</Filter>
     </ClCompile>
+    <ClCompile Include="Hamiltonian\HPath.cpp">
+      <Filter>Hamiltonian</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -81,6 +84,9 @@
       <Filter>Hamiltonian</Filter>
     </ClInclude>
     <ClInclude Include="Hamiltonian\HEdge.h">
+      <Filter>Hamiltonian</Filter>
+    </ClInclude>
+    <ClInclude Include="Hamiltonian\HPath.h">
       <Filter>Hamiltonian</Filter>
     </ClInclude>
   </ItemGroup>

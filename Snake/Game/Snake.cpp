@@ -6,7 +6,7 @@
 
 using namespace sf;
 
-Snake::Snake(RenderWindow& window, HamiltonianCycle& cycle, const unsigned cellSize, FoodGenerator& foodGen) : m_window(window), m_cycle(cycle), m_cellSize(cellSize), m_direction(Direction::right),
+Snake::Snake(RenderWindow& window, HamiltonianCycle& hamCycle, const unsigned cellSize, FoodGenerator& foodGen) : m_window(window), m_hamCycle(hamCycle), m_cellSize(cellSize), m_direction(Direction::right),
 														 m_timeToUpdate(50000), m_foodGenerator(foodGen)
 {
 	AddCase();
@@ -32,8 +32,22 @@ void Snake::Move()
 			}
 		}
 
-		// Set first cell position based on movement direction
-		m_snakes[0].move(static_cast<float>(m_direction.x * static_cast<int>(m_cellSize)), static_cast<float>(m_direction.y * static_cast<int>(m_cellSize)));
+		if (m_isAI)
+		{
+			if (m_path || m_path->m_pathCounter >= m_path->m_pathLength)
+			{
+				CalculatePath();
+			}
+
+			if (!m_path || m_path->m_pathLength == 0)
+			{
+				//To do 87
+			}
+		} else
+		{
+			// Set first cell position based on movement direction
+			m_snakes[0].move(static_cast<float>(m_direction.x * static_cast<int>(m_cellSize)), static_cast<float>(m_direction.y * static_cast<int>(m_cellSize)));
+		}
 
 		CheckCollision();
 	}
@@ -170,7 +184,7 @@ void Snake::AddCase() // Add 1 more case
 	{
 		cell.setFillColor(Color::Yellow);
 		
-		cell.setPosition(m_cycle.m_cycle[0]->m_x * m_cellSize, m_cycle.m_cycle[0]->m_y * m_cellSize);
+		cell.setPosition(m_hamCycle.m_cycle[0]->m_x * m_cellSize, m_hamCycle.m_cycle[0]->m_y * m_cellSize);
 	} else
 	{
 		cell.setFillColor(Color::Green);
@@ -210,4 +224,112 @@ void Snake::AddCase() // Add 1 more case
 	}
 
 	m_snakes.push_back(cell);
+}
+
+std::shared_ptr<HPath> Snake::CalculatePath()
+{
+	for (auto* node : m_hamCycle.m_cycle)
+	{
+		node->ResetForAStar();
+	}
+	m_appleCyclePosition = m_hamCycle.GetNodeNo(m_foodGenerator.m_fruit.getPosition().x / m_cellSize, m_foodGenerator.m_fruit.getPosition().y / m_cellSize);
+
+	auto* startNode = m_hamCycle.m_cycle[m_hamCycle.GetNodeNo(m_snakes[0].getPosition().x, m_snakes[0].getPosition().y)];
+	std::deque<HPath> bigList;
+
+	std::shared_ptr<HPath> winningPath;
+	
+	bigList.emplace_back(*startNode, *m_hamCycle.m_cycle[m_appleCyclePosition]);
+
+	while (true)
+	{
+		if (bigList.empty())
+		{
+			return winningPath;
+		}
+		auto& currentPath = bigList[0];
+		bigList.pop_front();
+		if (winningPath && currentPath.m_pathLength >= winningPath->m_pathLength)
+		{
+			continue;
+		}
+
+		if (currentPath.m_distanceToApple == 0) //path has found apple
+		{
+			if (winningPath == nullptr || currentPath.m_pathLength < winningPath->m_pathLength) {
+				winningPath = std::make_shared<HPath>(currentPath);
+			}
+			continue;
+		}
+
+		//if the final node has been visited and the previous visit was a shorter path then fuck this path
+		auto finalNodeInPath = currentPath.GetLastNode();
+
+		if (!finalNodeInPath.m_alreadyVisited || currentPath.m_pathLength < finalNodeInPath.m_shortestDistanceToThisPoint)
+		{
+			//this is the shortest found path to this point
+			finalNodeInPath.m_alreadyVisited = true;
+			finalNodeInPath.m_shortestDistanceToThisPoint = currentPath.m_pathLength;
+
+			//now we need to add all the paths possible from this node to the bigList
+			for (auto* node : finalNodeInPath.m_edges)
+			{
+				if (OverTakesTail(*node, finalNodeInPath, currentPath.GetSnakeTailPositionAfterFollowingPath(m_snakes.size())))
+				{
+					if (node->m_cycleNo != finalNodeInPath.m_cycleNo + 1)
+					{
+						continue;
+					}
+				}
+
+				auto p = std::make_shared<HPath>(currentPath);
+				p->AddToTail(*node);
+				if (p->GetLastNode().m_alreadyVisited && p->m_pathLength > p->GetLastNode().m_shortestDistanceToThisPoint)
+				{
+					continue;
+				}
+				bigList.push_back(*p);
+			}
+		}
+
+		//now we need to sort the bigList based on the distances to the apple plus the current distance of the path
+		std::sort(bigList.begin(), bigList.end(), [](HPath& a, HPath& b) { return (a.m_distanceToApple + a.m_pathLength) - (b.m_distanceToApple + b.m_pathLength);});
+	}
+}
+
+bool Snake::OverTakesTail(HNode& newPos, HNode& h, HNode& t)
+{
+	const auto minDistanceBetweenHeadAndTail = 50;
+	const auto head = h.m_cycleNo;
+
+	const auto actualTail = m_hamCycle.GetNodeNo(m_snakes[0].getPosition().x, m_snakes[0].getPosition().y);
+	if (GetDistanceBetweenPoints(head, actualTail) <= minDistanceBetweenHeadAndTail + m_snakes.size())
+	{
+		return true;
+	}
+
+	int tail = actualTail - minDistanceBetweenHeadAndTail - m_snakes.size();
+	if (tail < 0)
+	{
+		tail += m_hamCycle.m_cycle.size();
+	}
+
+	auto temp = head;
+	auto nextPosNo = newPos.m_cycleNo;
+	if (GetDistanceBetweenPoints(head, newPos.m_cycleNo) >= GetDistanceBetweenPoints(head, tail))
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+int Snake::GetDistanceBetweenPoints(const int from, const int to) const
+{
+	auto distance = to - from;
+	while (distance < 0)
+	{
+		distance += m_hamCycle.m_cycle.size();
+	}
+	return distance;
 }

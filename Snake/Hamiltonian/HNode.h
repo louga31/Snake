@@ -21,15 +21,11 @@ public:
 	HDirection GetDirectionTo(const HNode& other) const;
 	HNode& GetNextNodeMovingLeft(HNode& previousNode);
 
-
-private:
-
 	//A* variables
 	bool m_alreadyVisited = false;
 	unsigned m_shortestDistanceToThisPoint = 0;
-	
-	void ResetForAStar();
 
+	void ResetForAStar();
 };
 
 ////////////////////////////////////////////////////////////

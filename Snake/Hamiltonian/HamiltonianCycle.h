@@ -19,7 +19,7 @@ public:
 	void Draw() const;
 	HNode* GetNextPosition(unsigned x, unsigned y);
 	unsigned GetNodeNo(unsigned x, unsigned y);
-	std::vector<HNode*> GetPossiblePositionsFrom(unsigned x, unsigned y);
+	std::vector<unsigned> GetPossiblePositionsFrom(unsigned x, unsigned y);
 	
 private:
 	RenderWindow& m_window;
