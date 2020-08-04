@@ -37,7 +37,7 @@ inline HDirection getRightOf(const HDirection d) {
 /// \relates HDirection
 /// \brief Overload of binary operator ==
 ///
-/// This operator compares strict equality between two HNode.
+/// This operator compares strict equality between two HDirection.
 ///
 /// \param left  Left operand (a HDirection)
 /// \param right Right operand (a HDirection)
@@ -48,4 +48,20 @@ inline HDirection getRightOf(const HDirection d) {
 inline bool operator ==(const HDirection& left, const HDirection& right)
 {
 	return left.x == right.x && left.y == right.y;
+}
+
+////////////////////////////////////////////////////////////
+/// \relates HDirection
+/// \brief Overload of binary operator <<
+///
+/// This operator compares strict equality between two HDirection.
+///
+/// \param os ostream
+/// \param m class member to print
+///
+/// \return True if \a left is equal to \a right
+///
+////////////////////////////////////////////////////////////
+inline std::ostream& operator <<(std::ostream& os, const HDirection& m) {
+	return os << "x:" << m.x << " y:" << m.y;
 }

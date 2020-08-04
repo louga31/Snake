@@ -9,11 +9,11 @@ public:
 
 	HEdge(const HEdge& edge);
 
-	[[nodiscard]] bool IsEqualTo(const HEdge& otherEdge) const;
+	bool IsEqualTo(const HEdge& otherEdge) const;
 
-	[[nodiscard]] bool Contains(const HNode& node) const;
+	bool Contains(const HNode& node) const;
 
-	[[nodiscard]] HNode& GetOtherNode(const HNode& node) const;
+	HNode& GetOtherNode(const HNode& node) const;
 
 	void ConnectNodes() const;
 

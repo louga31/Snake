@@ -2,9 +2,11 @@
 
 #include "Snake.h"
 
+#include "Hamiltonian/HamiltonianCycle.h"
+
 using namespace sf;
 
-Snake::Snake(RenderWindow& window, const unsigned cellSize, FoodGenerator& foodGen) : m_window(window), m_cellSize(cellSize), m_direction(Direction::right),
+Snake::Snake(RenderWindow& window, HamiltonianCycle& cycle, const unsigned cellSize, FoodGenerator& foodGen) : m_window(window), m_cycle(cycle), m_cellSize(cellSize), m_direction(Direction::right),
 														 m_timeToUpdate(50000), m_foodGenerator(foodGen)
 {
 	AddCase();
@@ -167,7 +169,8 @@ void Snake::AddCase() // Add 1 more case
 	if (m_snakes.empty())
 	{
 		cell.setFillColor(Color::Yellow);
-		cell.setPosition(m_window.getSize().x / 2.0f, m_window.getSize().y / 2.0f);
+		
+		cell.setPosition(m_cycle.m_cycle[0]->m_x * m_cellSize, m_cycle.m_cycle[0]->m_y * m_cellSize);
 	} else
 	{
 		cell.setFillColor(Color::Green);

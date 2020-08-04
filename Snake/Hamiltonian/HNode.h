@@ -59,3 +59,19 @@ bool operator ==(const HNode& left, const HNode& right);
 ///
 ////////////////////////////////////////////////////////////
 bool operator !=(const HNode& left, const HNode& right);
+
+////////////////////////////////////////////////////////////
+/// \relates HNode
+/// \brief Overload of binary operator <<
+///
+/// This operator output node coordinates to ostream.
+///
+/// \param os ostream
+/// \param m class member to print
+///
+/// \return True if \a left is equal to \a right
+///
+////////////////////////////////////////////////////////////
+inline std::ostream& operator <<(std::ostream& os, const HNode& m) {
+	return os << "x:" << m.m_x << " y:" << m.m_y;
+}

@@ -4,6 +4,9 @@
 
 #include "Snake.h"
 
+#include "Hamiltonian/HamiltonianCycle.h"
+
+
 using namespace sf;
 
 Game::Game(const unsigned numberOfColumns, const unsigned numberOfLines, const unsigned cellSize) : m_cellSize(cellSize), m_screenWidth(cellSize* numberOfColumns), m_screenHeight(cellSize* numberOfLines)
@@ -19,9 +22,11 @@ void Game::Run() const
 	window.setFramerateLimit(0);
 	window.setKeyRepeatEnabled(false);
 
+	HamiltonianCycle cycle(window, m_cellSize, m_screenWidth / m_cellSize, m_screenHeight / m_cellSize);
+	
 	FoodGenerator foodGen(window, m_cellSize);
 
-	Snake snake(window, m_cellSize, foodGen);
+	Snake snake(window, cycle, m_cellSize, foodGen);
 	
 	while (window.isOpen())
 	{
@@ -54,6 +59,7 @@ void Game::Run() const
 
 		snake.Draw();
 		foodGen.Draw();
+		cycle.Draw();
 		
 		window.display();
 	}

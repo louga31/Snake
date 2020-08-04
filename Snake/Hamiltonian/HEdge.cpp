@@ -2,8 +2,6 @@
 
 #include "HEdge.h"
 
-#include "HNode.h"
-
 
 HEdge::HEdge(HNode& node1, HNode& node2) : m_node1(node1), m_node2(node2)
 {

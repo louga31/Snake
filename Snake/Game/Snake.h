@@ -1,11 +1,12 @@
 ﻿#pragma once
 
+class HamiltonianCycle;
 using namespace sf;
 
 class Snake
 {
 public:
-	Snake(RenderWindow& window, unsigned cellSize, FoodGenerator& foodGen);
+	Snake(RenderWindow& window, HamiltonianCycle& cycle, unsigned cellSize, FoodGenerator& foodGen);
 
 	void Move();
 	void Update(Event& event);
@@ -13,6 +14,7 @@ public:
 	
 private:
 	RenderWindow& m_window;
+	HamiltonianCycle& m_cycle;
 	unsigned m_cellSize;
 	Vector2i m_direction;
 	Clock m_clock;

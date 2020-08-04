@@ -5,7 +5,7 @@ using namespace sf;
 
 #define NUMBER_COLUMNS 30
 #define NUMBER_LINES 30
-#define CELL_SIZE 32
+#define CELL_SIZE 40
 
 int main()
 {

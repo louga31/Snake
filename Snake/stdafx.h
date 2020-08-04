@@ -14,6 +14,7 @@
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <ostream>
 #include <random>
 #include <ranges>
 #include <stdexcept>

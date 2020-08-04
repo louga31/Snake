@@ -38,7 +38,10 @@ void HNode::SetEdges(std::vector<HNode>& allNodes)
 	
 	for (auto& node : allNodes)
 	{
-		m_edges.push_back(&node);
+		if (dist(node.m_x, node.m_y, m_x, m_y) == 1)
+		{
+			m_edges.push_back(&node);
+		}
 	}
 }
 
