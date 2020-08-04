@@ -6,8 +6,9 @@
 
 using namespace sf;
 
-Snake::Snake(RenderWindow& window, HamiltonianCycle& hamCycle, const unsigned cellSize, FoodGenerator& foodGen) : m_window(window), m_hamCycle(hamCycle), m_cellSize(cellSize), m_direction(Direction::right),
-														 m_timeToUpdate(50000), m_foodGenerator(foodGen)
+#define INITIAL_LENGTH 4
+
+Snake::Snake(RenderWindow& window, HamiltonianCycle& hamCycle, const unsigned cellSize, FoodGenerator& foodGen) : m_window(window), m_hamCycle(hamCycle), m_cellSize(cellSize), m_foodGenerator(foodGen)
 {
 	AddCase();
 	AddCase();
@@ -26,29 +27,35 @@ void Snake::Move()
 		// Move all snake cells to previous one position, except for the first cell
 		if (m_snakes.size() > 1)
 		{
-			for (auto i = m_snakes.size() - 1; i > 0; i--)
+			for (int i = m_tailBlocks.size() - 1; i >= 0; i--)
 			{
-				m_snakes[i].setPosition(Vector2f(m_snakes[i - 1].getPosition().x, m_snakes[i - 1].getPosition().y));
+				if (i == 0)
+				{
+					m_tailBlocks[i] = Vector2f(m_snakes[0].getPosition().x / m_cellSize, static_cast<float>(m_snakes[0].getPosition().y / m_cellSize));
+					m_snakes[i + 1].setPosition(m_tailBlocks[i] * static_cast<float>(m_cellSize));
+					continue;
+				}
+				m_tailBlocks[i] = m_tailBlocks[i - 1];
+				m_snakes[i + 1].setPosition(m_tailBlocks[i] * static_cast<float>(m_cellSize));
 			}
 		}
-
+		
 		if (m_isAI)
 		{
-			if (m_path || m_path->m_pathCounter >= m_path->m_pathLength)
+			if (m_path == nullptr || m_path->m_pathCounter >= m_path->m_pathLength)
 			{
-				CalculatePath();
+				m_path = CalculatePath();
 			}
-
-			if (!m_path || m_path->m_pathLength == 0)
-			{
-				//To do 87
-			}
-		} else
+			const auto nextMove = m_path->GetNextMove();
+			m_snakes[0].move(static_cast<float>(nextMove.x * static_cast<int>(m_cellSize)), static_cast<float>(nextMove.y * static_cast<int>(m_cellSize)));
+			
+		}
+		else
 		{
 			// Set first cell position based on movement direction
 			m_snakes[0].move(static_cast<float>(m_direction.x * static_cast<int>(m_cellSize)), static_cast<float>(m_direction.y * static_cast<int>(m_cellSize)));
 		}
-
+		
 		CheckCollision();
 	}
 }
@@ -169,6 +176,7 @@ void Snake::CheckCollision()
 	{
 		AddCase();
 		m_foodGenerator.GenerateFruit(m_snakes);
+		CalculatePath();
 	}
 }
 
@@ -179,47 +187,74 @@ void Snake::AddCase() // Add 1 more case
 	cell.setOutlineColor(Color::Black);
 	cell.setOutlineThickness(1.0f);
 
-	// First cell is yellow and spawn at the middle of the screen
-	if (m_snakes.empty())
+	cell.setFillColor(Color::Green);
+	
+	if (m_snakes.size() < INITIAL_LENGTH)
 	{
-		cell.setFillColor(Color::Yellow);
-		
-		cell.setPosition(m_hamCycle.m_cycle[0]->m_x * m_cellSize, m_hamCycle.m_cycle[0]->m_y * m_cellSize);
-	} else
-	{
-		cell.setFillColor(Color::Green);
-		
-		if (m_snakes.size() == 1)
+		// First cell is yellow and first INITIAL_LENGTH cells spawn on first nodes of cycle
+		if (m_snakes.empty())
 		{
-			cell.setPosition(m_snakes[m_snakes.size() - 1].getPosition().x - cell.getSize().x * m_direction.x, m_snakes[m_snakes.size() - 1].getPosition().y - cell.getSize().y * m_direction.y);
-		}
-		else
-		{
-			if (m_snakes[m_snakes.size() - 1].getPosition().x == m_snakes[m_snakes.size() - 2].getPosition().x)
+			cell.setFillColor(Color::Yellow);
+			cell.setPosition(m_hamCycle.m_cycle[INITIAL_LENGTH - 1]->m_x * m_cellSize, m_hamCycle.m_cycle[INITIAL_LENGTH - 1]->m_y * m_cellSize);
+
+			// Set Direction based on cycle next node
+			const auto direction = m_hamCycle.m_cycle[INITIAL_LENGTH - 1]->GetDirectionTo(*m_hamCycle.m_cycle[INITIAL_LENGTH]);
+			if (direction.x == 0)
 			{
-				if (m_snakes[m_snakes.size() - 1].getPosition().y - m_snakes[m_snakes.size() - 2].getPosition().y > 0)
+				if (direction.y == 1)
 				{
-					cell.setPosition(m_snakes[m_snakes.size() - 1].getPosition().x, m_snakes[m_snakes.size() - 1].getPosition().y + 1);
-				}
-				else
+					m_direction = Direction::down;
+				} else
 				{
-					cell.setPosition(m_snakes[m_snakes.size() - 1].getPosition().x, m_snakes[m_snakes.size() - 1].getPosition().y - 1);
-				}
-			}
-			else if (m_snakes[m_snakes.size() - 1].getPosition().y == m_snakes[m_snakes.size() - 2].getPosition().y)
-			{
-				if (m_snakes[m_snakes.size() - 1].getPosition().x - m_snakes[m_snakes.size() - 2].getPosition().x > 0)
-				{
-					cell.setPosition(m_snakes[m_snakes.size() - 1].getPosition().x + 1, m_snakes[m_snakes.size() - 1].getPosition().y);
-				}
-				else
-				{
-					cell.setPosition(m_snakes[m_snakes.size() - 1].getPosition().x - 1, m_snakes[m_snakes.size() - 1].getPosition().y);
+					m_direction = Direction::up;
 				}
 			} else
 			{
-				throw std::runtime_error("Failed to add snake cell");
+				if (direction.x == 1)
+				{
+					m_direction = Direction::right;
+				} else
+				{
+					m_direction = Direction::left;
+				}
 			}
+		}
+		else
+		{
+			m_tailBlocks.emplace_back(m_hamCycle.m_cycle[INITIAL_LENGTH - 1 - m_snakes.size()]->m_x, m_hamCycle.m_cycle[INITIAL_LENGTH - 1 - m_snakes.size()]->m_y);
+			cell.setPosition(m_tailBlocks.back() * static_cast<float>(m_cellSize));
+		}
+
+	} else
+	{
+		if (m_tailBlocks.back().x == m_tailBlocks[m_tailBlocks.size() - 2].x)
+		{
+			if (m_tailBlocks.back().y - m_tailBlocks[m_tailBlocks.size() - 2].y > 0)
+			{
+				m_tailBlocks.emplace_back(m_tailBlocks.back().x, m_tailBlocks.back().y + 1);
+				cell.setPosition(m_tailBlocks.back() * static_cast<float>(m_cellSize));
+			}
+			else
+			{
+				m_tailBlocks.emplace_back(m_tailBlocks.back().x, m_tailBlocks.back().y - 1);
+				cell.setPosition(m_tailBlocks.back() * static_cast<float>(m_cellSize));
+			}
+		}
+		else if (m_tailBlocks.back().y == m_tailBlocks[m_tailBlocks.size() - 2].y)
+		{
+			if (m_tailBlocks.back().x - m_tailBlocks[m_tailBlocks.size() - 2].x > 0)
+			{
+				m_tailBlocks.emplace_back(m_tailBlocks.back().x + 1, m_tailBlocks.back().y);
+				cell.setPosition(m_tailBlocks.back() * static_cast<float>(m_cellSize));
+			}
+			else
+			{
+				m_tailBlocks.emplace_back(m_tailBlocks.back().x - 1, m_tailBlocks.back().y);
+				cell.setPosition(m_tailBlocks.back() * static_cast<float>(m_cellSize));
+			}
+		} else
+		{
+			throw std::runtime_error("Failed to add snake cell");
 		}
 	}
 
@@ -232,14 +267,15 @@ std::shared_ptr<HPath> Snake::CalculatePath()
 	{
 		node->ResetForAStar();
 	}
+	
 	m_appleCyclePosition = m_hamCycle.GetNodeNo(m_foodGenerator.m_fruit.getPosition().x / m_cellSize, m_foodGenerator.m_fruit.getPosition().y / m_cellSize);
 
-	auto* startNode = m_hamCycle.m_cycle[m_hamCycle.GetNodeNo(m_snakes[0].getPosition().x, m_snakes[0].getPosition().y)];
-	std::deque<HPath> bigList;
+	auto* startNode = m_hamCycle.m_cycle[m_hamCycle.GetNodeNo(m_snakes[0].getPosition().x / m_cellSize, m_snakes[0].getPosition().y / m_cellSize)];
+	std::deque<std::shared_ptr<HPath>> bigList;
 
 	std::shared_ptr<HPath> winningPath;
-	
-	bigList.emplace_back(*startNode, *m_hamCycle.m_cycle[m_appleCyclePosition]);
+
+	bigList.emplace_back(std::make_shared<HPath>(startNode, m_hamCycle.m_cycle[m_appleCyclePosition]));
 
 	while (true)
 	{
@@ -247,34 +283,34 @@ std::shared_ptr<HPath> Snake::CalculatePath()
 		{
 			return winningPath;
 		}
-		auto& currentPath = bigList[0];
+		auto currentPath = bigList[0];
 		bigList.pop_front();
-		if (winningPath && currentPath.m_pathLength >= winningPath->m_pathLength)
+		if (winningPath != nullptr && currentPath->m_pathLength >= winningPath->m_pathLength)
 		{
 			continue;
 		}
 
-		if (currentPath.m_distanceToApple == 0) //path has found apple
+		if (currentPath->m_distanceToApple == 0) //path has found apple
 		{
-			if (winningPath == nullptr || currentPath.m_pathLength < winningPath->m_pathLength) {
-				winningPath = std::make_shared<HPath>(currentPath);
+			if (winningPath == nullptr || currentPath->m_pathLength < winningPath->m_pathLength) {
+				winningPath = std::make_shared<HPath>(*currentPath);
 			}
 			continue;
 		}
 
 		//if the final node has been visited and the previous visit was a shorter path then fuck this path
-		auto finalNodeInPath = currentPath.GetLastNode();
+		auto& finalNodeInPath = currentPath->GetLastNode();
 
-		if (!finalNodeInPath.m_alreadyVisited || currentPath.m_pathLength < finalNodeInPath.m_shortestDistanceToThisPoint)
+		if (!finalNodeInPath.m_alreadyVisited || currentPath->m_pathLength < finalNodeInPath.m_shortestDistanceToThisPoint)
 		{
 			//this is the shortest found path to this point
 			finalNodeInPath.m_alreadyVisited = true;
-			finalNodeInPath.m_shortestDistanceToThisPoint = currentPath.m_pathLength;
+			finalNodeInPath.m_shortestDistanceToThisPoint = currentPath->m_pathLength;
 
 			//now we need to add all the paths possible from this node to the bigList
 			for (auto* node : finalNodeInPath.m_edges)
 			{
-				if (OverTakesTail(*node, finalNodeInPath, currentPath.GetSnakeTailPositionAfterFollowingPath(m_snakes.size())))
+				if (OverTakesTail(node, &finalNodeInPath, &currentPath->GetSnakeTailPositionAfterFollowingPath(*this, m_hamCycle, m_cellSize))) // P
 				{
 					if (node->m_cycleNo != finalNodeInPath.m_cycleNo + 1)
 					{
@@ -282,41 +318,57 @@ std::shared_ptr<HPath> Snake::CalculatePath()
 					}
 				}
 
-				auto p = std::make_shared<HPath>(currentPath);
+				auto p = std::make_shared<HPath>(*currentPath);
 				p->AddToTail(*node);
 				if (p->GetLastNode().m_alreadyVisited && p->m_pathLength > p->GetLastNode().m_shortestDistanceToThisPoint)
 				{
 					continue;
 				}
-				bigList.push_back(*p);
+				bigList.push_back(p);
 			}
 		}
 
 		//now we need to sort the bigList based on the distances to the apple plus the current distance of the path
-		std::sort(bigList.begin(), bigList.end(), [](HPath& a, HPath& b) { return (a.m_distanceToApple + a.m_pathLength) - (b.m_distanceToApple + b.m_pathLength);});
+		std::sort(bigList.begin(), bigList.end(), [](const std::shared_ptr<HPath>& a, const std::shared_ptr<HPath>& b) { return a->m_distanceToApple + a->m_pathLength < b->m_distanceToApple + b->m_pathLength;});
 	}
 }
 
-bool Snake::OverTakesTail(HNode& newPos, HNode& h, HNode& t)
+bool Snake::OverTakesTail(HNode* newPos, HNode* h, HNode* t)
 {
 	const auto minDistanceBetweenHeadAndTail = 50;
-	const auto head = h.m_cycleNo;
+	
+	int head;
+	if (h != nullptr)
+	{
+		head = h->m_cycleNo;
+	} else
+	{
+		head = m_hamCycle.GetNodeNo(m_snakes[0].getPosition().x, m_snakes[0].getPosition().y);
+	}
 
-	const auto actualTail = m_hamCycle.GetNodeNo(m_snakes[0].getPosition().x, m_snakes[0].getPosition().y);
-	if (GetDistanceBetweenPoints(head, actualTail) <= minDistanceBetweenHeadAndTail + m_snakes.size())
+	int actualTail;
+	if (t != nullptr)
+	{
+		actualTail = m_hamCycle.GetNodeNo(t->m_x, t->m_y);
+	} else
+	{
+		actualTail = m_hamCycle.GetNodeNo(m_tailBlocks[0].x, m_tailBlocks[0].y);
+	}
+	
+	if (GetDistanceBetweenPoints(head, actualTail) <= minDistanceBetweenHeadAndTail + 1)
 	{
 		return true;
 	}
 
-	int tail = actualTail - minDistanceBetweenHeadAndTail - m_snakes.size();
+	auto tail = actualTail - minDistanceBetweenHeadAndTail - 1;
 	if (tail < 0)
 	{
 		tail += m_hamCycle.m_cycle.size();
 	}
 
 	auto temp = head;
-	auto nextPosNo = newPos.m_cycleNo;
-	if (GetDistanceBetweenPoints(head, newPos.m_cycleNo) >= GetDistanceBetweenPoints(head, tail))
+	auto nextPosNo = newPos->m_cycleNo;
+	if (GetDistanceBetweenPoints(head, newPos->m_cycleNo) >= GetDistanceBetweenPoints(head, tail))
 	{
 		return true;
 	}

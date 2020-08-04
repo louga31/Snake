@@ -18,6 +18,7 @@ public:
 
 	void Draw() const;
 	HNode* GetNextPosition(unsigned x, unsigned y);
+	unsigned GetNodeNo(Vector2f position);
 	unsigned GetNodeNo(unsigned x, unsigned y);
 	std::vector<unsigned> GetPossiblePositionsFrom(unsigned x, unsigned y);
 	

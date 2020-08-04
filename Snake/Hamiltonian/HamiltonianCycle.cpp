@@ -3,7 +3,7 @@
 
 using namespace std::string_literals;
 
-#define FONT_SIZE 14
+#define FONT_SIZE 12
 
 HamiltonianCycle::HamiltonianCycle(RenderWindow& window, unsigned cellSize, const size_t width, const size_t height) :m_window(window), m_cellSize(cellSize), m_width(width), m_height(height)
 {
@@ -41,6 +41,19 @@ HNode* HamiltonianCycle::GetNextPosition(unsigned x, unsigned y)
 	return nullptr;
 }
 
+unsigned HamiltonianCycle::GetNodeNo(const Vector2f position)
+{
+	for (auto i = 0; i < m_cycle.size(); i++)
+	{
+		if (m_cycle[i]->m_x == position.x && m_cycle[i]->m_y == position.y)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+
 unsigned HamiltonianCycle::GetNodeNo(const unsigned x, const unsigned y)
 {
 	for (auto i = 0; i < m_cycle.size(); i++)
@@ -53,7 +66,7 @@ unsigned HamiltonianCycle::GetNodeNo(const unsigned x, const unsigned y)
 	return -1;
 }
 
-std::vector<unsigned> HamiltonianCycle::GetPossiblePositionsFrom(unsigned x, unsigned y)
+std::vector<unsigned> HamiltonianCycle::GetPossiblePositionsFrom(const unsigned x, const unsigned y)
 {
 	auto* currentNode = m_cycle[GetNodeNo(x, y)];
 	std::vector<unsigned> nodeNos;
@@ -99,7 +112,7 @@ void HamiltonianCycle::CreateSpanningTree()
 	{
 		node.SetSpanningTreeEdges(m_spanningTree);
 	}
-
+	
 	for (auto& node : m_stNodes)
 	{
 		if (!FindInVector(nodesInSpanningTree, &node).first)

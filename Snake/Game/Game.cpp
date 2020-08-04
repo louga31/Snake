@@ -59,7 +59,11 @@ void Game::Run() const
 
 		snake.Draw();
 		foodGen.Draw();
-		hamCycle.Draw();
+
+		if (snake.m_isAI)
+		{
+			hamCycle.Draw();
+		}
 		
 		window.display();
 	}
