@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Snake", "Snake\Snake.vcxproj", "{9A1B94D8-32E0-46A3-82BA-57A381DBA816}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests\Tests.vcxproj", "{01B15713-E4D8-49E3-A6B5-A1CDEFC75F6C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -17,10 +15,6 @@ Global
 		{9A1B94D8-32E0-46A3-82BA-57A381DBA816}.Debug|x64.Build.0 = Debug|x64
 		{9A1B94D8-32E0-46A3-82BA-57A381DBA816}.Release|x64.ActiveCfg = Release|x64
 		{9A1B94D8-32E0-46A3-82BA-57A381DBA816}.Release|x64.Build.0 = Release|x64
-		{01B15713-E4D8-49E3-A6B5-A1CDEFC75F6C}.Debug|x64.ActiveCfg = Debug|x64
-		{01B15713-E4D8-49E3-A6B5-A1CDEFC75F6C}.Debug|x64.Build.0 = Debug|x64
-		{01B15713-E4D8-49E3-A6B5-A1CDEFC75F6C}.Release|x64.ActiveCfg = Release|x64
-		{01B15713-E4D8-49E3-A6B5-A1CDEFC75F6C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

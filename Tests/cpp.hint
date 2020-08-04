@@ -1,7 +1,0 @@
-// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
-// such as names of functions and macros.
-// For more information see https://go.microsoft.com/fwlink/?linkid=865984
-#define BOOST_AUTO_TEST_SUITE(__VA_ARGS__) BOOST_TEST_INVOKE_IF_N_ARGS( 1, BOOST_AUTO_TEST_SUITE_NO_DECOR, BOOST_AUTO_TEST_SUITE_WITH_DECOR, __VA_ARGS__)
-#define BOOST_AUTO_TEST_SUITE(suite_name) BOOST_AUTO_TEST_SUITE_NO_DECOR( suite_name )
-#define BOOST_AUTO_TEST_CASE(__VA_ARGS__) BOOST_TEST_INVOKE_IF_N_ARGS( 1, BOOST_AUTO_TEST_CASE_NO_DECOR, BOOST_AUTO_TEST_CASE_WITH_DECOR, __VA_ARGS__)
-#define BOOST_AUTO_TEST_CASE(test_name) BOOST_AUTO_TEST_CASE_NO_DECOR( test_name )
